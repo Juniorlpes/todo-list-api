@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
+require('dotenv/config');
 
-const dbConfig = require('../config/database');
+const User = require('../api/models/user');
 
-//Import Models
-
-const connection = new Sequelize(dbConfig);
+const connection = new Sequelize(process.env.DB_CONNECTION_STRING);
 
 // try {
 //     connection.authenticate();
@@ -13,6 +12,6 @@ const connection = new Sequelize(dbConfig);
 //     console.error('Unable to connect to the database:', error);
 // }
 
-//Init models
+User.init(connection);
 
 module.exports = connection;

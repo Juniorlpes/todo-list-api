@@ -1,4 +1,7 @@
-module.exports = {
+require('dotenv').config();
+
+//Not used
+const old_mysql_config = {
     host: "localhost",
     dialect: 'mysql',
     username: 'root',
@@ -9,4 +12,9 @@ module.exports = {
         timestamp: true,
         underscored: true,
     },
+}
+
+module.exports = {
+    use_env_variable: 'DB_CONNECTION_STRING',
+    dialect: 'postgres',
 }
