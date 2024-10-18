@@ -1,4 +1,5 @@
 const UserRepository = require('../repositories/user-repository');
+const RestError = require('../errors/rest-errors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv/config');
@@ -23,6 +24,27 @@ class UserService {
                 createdAt: undefined,
             },
             token,
+        };
+    };
+    async login(email, password) {
+        const user = await UserRepository.findByEmail(email);
+
+        if (!user) {
+            throw new RestError('E-mail ou senha incorreto!', 400);
+        }
+
+        if (!bcrypt.compareSync(password, user.password)) {
+            throw new RestError('E-mail ou senha incorreto!', 400);
+        }
+
+        return {
+            user: {
+                ...user.get(),
+                password: undefined,
+                updatedAt: undefined,
+                createdAt: undefined,
+            },
+            token: generateToken({ id: user.id }),
         };
     }
 }
