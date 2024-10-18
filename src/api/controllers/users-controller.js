@@ -1,4 +1,5 @@
 const UserService = require('../services/user-service');
+var emailValidator = require("email-validator");
 require('dotenv/config');
 
 class UsersController {
@@ -17,6 +18,10 @@ class UsersController {
     async store(req, res) {
         try {
             const { email, password } = req.body;
+
+            if (!emailValidator.validate(email)) {
+                return res.status(400).send('Invalid Email');
+            }
 
             const { user, token } = await UserService.createUser(email, password);
             user.token = token;
