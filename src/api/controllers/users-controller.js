@@ -9,7 +9,7 @@ class UsersController {
             const { user, token } = await UserService.login(email, password);
             user.token = token;
 
-            return res.status(201).send(user);
+            return res.status(200).send(user);
         } catch (error) {
             return res.status(error.statusCode || 500).send(error.message || error);
         }
@@ -26,7 +26,21 @@ class UsersController {
             return res.status(500).send(err);
         }
     };
-    async refreshToken(req, res) { };
+    async refreshToken(req, res) {
+        try {
+            const { refreshToken } = req.body;
+
+            if (!refreshToken) {
+                return res.status(401).send({ error: 'Refresh token not sent' });
+            }
+
+            const tokens = await UserService.refreshToken(refreshToken);
+
+            return res.status(200).send(tokens);
+        } catch (error) {
+            return res.status(error.statusCode || 500).send(error.message || error);
+        }
+    };
 }
 
 module.exports = new UsersController();

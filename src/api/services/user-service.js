@@ -4,9 +4,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv/config');
 
-function generateToken(params = {}) {
+function generateToken(params = {}, expiresIn = 86400) {
     return jwt.sign(params, process.env.AUTH_CRYPT_SECRET, {
-        expiresIn: 86400,
+        expiresIn: expiresIn,
     });
 }
 
@@ -14,7 +14,8 @@ class UserService {
     async createUser(email, password) {
         const user = await UserRepository.create({ email, password });
 
-        const token = generateToken({ id: user.id });
+        const accessToken = generateToken({ id: user.id, type: "access" });
+        const refreshToken = generateToken({ id: user.id, type: "refresh" }, '40d');
 
         return {
             user: {
@@ -23,19 +24,25 @@ class UserService {
                 updatedAt: undefined,
                 createdAt: undefined,
             },
-            token,
+            token: {
+                accessToken,
+                refreshToken,
+            },
         };
     };
     async login(email, password) {
         const user = await UserRepository.findByEmail(email);
 
         if (!user) {
-            throw new RestError('E-mail ou senha incorreto!', 400);
+            throw new RestError('Invalid E-mail or password', 400);
         }
 
         if (!bcrypt.compareSync(password, user.password)) {
-            throw new RestError('E-mail ou senha incorreto!', 400);
+            throw new RestError('Invalid E-mail or password', 400);
         }
+
+        const accessToken = generateToken({ id: user.id, type: "access" });
+        const refreshToken = generateToken({ id: user.id, type: "refresh" }, '40d');
 
         return {
             user: {
@@ -44,8 +51,37 @@ class UserService {
                 updatedAt: undefined,
                 createdAt: undefined,
             },
-            token: generateToken({ id: user.id }),
+            token: {
+                accessToken,
+                refreshToken,
+            },
         };
+    };
+    async refreshToken(refreshToken) {
+        //I would have put the refresh token in db to compare...
+
+        try {
+            const decoded = jwt.verify(refreshToken, process.env.AUTH_CRYPT_SECRET);
+
+            if (decoded.type !== "refresh" || !decoded.id) {
+                throw new RestError('Invalid request', 400);
+            }
+
+            const accessToken = generateToken({ id: decoded.id, type: "access" });
+            const newRefreshToken = generateToken({ id: decoded.id, type: "refresh" }, '40d');
+
+            return {
+                accessToken,
+                newRefreshToken,
+            };
+        } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                throw new RestError('Token Expired, login again', 400);
+            } else if (error.name === 'JsonWebTokenError') {
+                throw new RestError('Invalid token', 400);
+            }
+            throw error;
+        }
     }
 }
 
