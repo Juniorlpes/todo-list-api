@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 require('dotenv/config');
 
 const User = require('../api/models/user');
+const TodoModel = require('../api/models/todo');
 
 const connection = new Sequelize(process.env.DB_CONNECTION_STRING);
 
@@ -13,5 +14,6 @@ const connection = new Sequelize(process.env.DB_CONNECTION_STRING);
 // }
 
 User.init(connection);
+TodoModel.init(connection);
 
 module.exports = connection;
