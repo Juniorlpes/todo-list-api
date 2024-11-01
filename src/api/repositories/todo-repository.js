@@ -11,6 +11,7 @@ class TodoRepository {
                 ['order']
             ],
             // ,include: User,
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
         });
     };
     async delete(todoId) {
@@ -26,12 +27,17 @@ class TodoRepository {
             {
                 where: {
                     id: todo.id
-                }
+                },
+                returning: true,
+                attributes: { exclude: ['createdAt', 'updatedAt'] },
             }
         )
     };
     async create(todo) {
-        return await TodoModel.create(todo);
+        const newTodo = await TodoModel.create(todo);
+
+        const { createdAt, updatedAt, ...result } = newTodo.get({ plain: true });
+        return result;
     };
     async updateAll(todos) {
         for (const item of todos) {
@@ -39,7 +45,10 @@ class TodoRepository {
         }
     };
     async getById(todoId) {
-        const todo = await TodoModel.findByPk(todoId);
+        const todo = await TodoModel.findByPk(todoId, {
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+        });
+
         if (todo === null) {
             throw new RestError('Not Found', 404);
         }
