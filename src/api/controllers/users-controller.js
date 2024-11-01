@@ -1,18 +1,15 @@
-const UserService = require('../services/user-service');
+const UserRepository = require('../repositories/user-repository');
 var emailValidator = require("email-validator");
 require('dotenv/config');
 
 class UsersController {
-    async login(req, res) {
+    async storeUser(req, res) {
         try {
-            const { email, password } = req.body;
+            await UserRepository.storeUser(req.userId, req.userEmail);
 
-            const { user, token } = await UserService.login(email, password);
-            user.token = token;
-
-            return res.status(200).send(user);
-        } catch (error) {
-            return res.status(error.statusCode || 500).send(error.message || error);
+            return res.status(201).send(user);
+        } catch (err) {
+            return res.status(500).send(err);
         }
     };
     async store(req, res) {
@@ -23,12 +20,24 @@ class UsersController {
                 return res.status(400).send('Invalid Email');
             }
 
-            const { user, token } = await UserService.createUser(email, password);
+            const { user, token } = await UserRepository.createUser(email, password);
             user.token = token;
 
             return res.status(201).send(user);
         } catch (err) {
             return res.status(500).send(err);
+        }
+    };
+    async login(req, res) {
+        try {
+            const { email, password } = req.body;
+
+            const { user, token } = await UserRepository.login(email, password);
+            user.token = token;
+
+            return res.status(200).send(user);
+        } catch (error) {
+            return res.status(error.statusCode || 500).send(error.message || error);
         }
     };
     async refreshToken(req, res) {
@@ -39,7 +48,7 @@ class UsersController {
                 return res.status(401).send({ error: 'Refresh token not sent' });
             }
 
-            const tokens = await UserService.refreshToken(refreshToken);
+            const tokens = await UserRepository.refreshToken(refreshToken);
 
             return res.status(200).send(tokens);
         } catch (error) {

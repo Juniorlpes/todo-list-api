@@ -19,3 +19,6 @@ app.use(cors(corsOptions));
 app.use(appRoutes);
 
 app.listen(process.env.PORT, () => console.log("No ar"));
+
+//TODO:
+// * Remove deprecated code in UserController

@@ -12,7 +12,7 @@ appRoutes.get('/api', async (request, response) => {
     return response.send('it works');
 });
 
-appRoutes.use('/api', usersRoutes);
+appRoutes.use('/api/auth', fireAuthMiddleware, usersRoutes);
 appRoutes.use('/api/todo', fireAuthMiddleware, todoRoutes);
 
 module.exports = appRoutes;

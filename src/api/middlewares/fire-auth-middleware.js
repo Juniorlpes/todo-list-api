@@ -18,7 +18,8 @@ module.exports = async function isAutheticated(request, response, next) {
     }
 
     request.userId = decodedIdToken.uid;
-    // request.userId = {
+    request.userEmail = decodedIdToken.email;
+    // request.user = {
     //     uid: decodedIdToken.uid
     // }
 
