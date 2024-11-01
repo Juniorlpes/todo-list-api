@@ -2,7 +2,7 @@
 
 const express = require('express');
 const appRoutes = express.Router();
-const authMiddleware = require('./api/middlewares/auth_middleware');
+const fireAuthMiddleware = require('./api/middlewares/fire-auth-middleware');
 
 const usersRoutes = require('./api/routes/users-routes');
 const todoRoutes = require('./api/routes/todo-routes');
@@ -13,6 +13,6 @@ appRoutes.get('/api', async (request, response) => {
 });
 
 appRoutes.use('/api', usersRoutes);
-appRoutes.use('/api/todo', authMiddleware, todoRoutes);
+appRoutes.use('/api/todo', fireAuthMiddleware, todoRoutes);
 
 module.exports = appRoutes;

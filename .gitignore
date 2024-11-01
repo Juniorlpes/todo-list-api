@@ -1,3 +1,4 @@
 /node_modules/
 #src/config/auth-key.json
 .env
+secretKey.json
