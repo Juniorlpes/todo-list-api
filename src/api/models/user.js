@@ -5,8 +5,7 @@ class User extends Model {
     static init(sequelize) {
         super.init({
             id: {
-                type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                type: DataTypes.STRING,
                 primaryKey: true
             },
             email: {
@@ -14,20 +13,20 @@ class User extends Model {
                 allowNull: false,
                 unique: true,
             },
-            password: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
+            // password: {
+            //     type: DataTypes.STRING,
+            //     allowNull: false,
+            // },
         }, {
             sequelize,
             tableName: 'users',
             timestamps: true,
-            hooks: {
-                beforeCreate: (user) => {
-                    const salt = bcrypt.genSaltSync();
-                    user.password = bcrypt.hashSync(user.password, salt);
-                }
-            }
+            // hooks: {
+            //     beforeCreate: (user) => {
+            //         const salt = bcrypt.genSaltSync();
+            //         user.password = bcrypt.hashSync(user.password, salt);
+            //     }
+            // }
         })
     }
 

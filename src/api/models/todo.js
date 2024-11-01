@@ -22,7 +22,7 @@ class TodoModel extends Model {
                 allowNull: false,
             },
             ownerId: {
-                type: DataTypes.UUID,
+                type: DataTypes.STRING,
                 references: { model: 'users', key: 'id' },
                 allowNull: false,
             },
