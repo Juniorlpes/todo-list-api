@@ -11,13 +11,16 @@ function generateToken(params = {}, expiresIn = 86400) {
 }
 
 class UserRepository {
-    async storeUser(userId, userEmail) {
-        let user = await User.findOne({ where: { id: userId } });
+    async storeUser(userData) {
+        const { id, email, name } = userData;
+
+        let user = await User.findOne({ where: { id: id } });
 
         if (!user)
             user = await User.create({
-                id: userId,
-                email: userEmail,
+                id: id,
+                email: email,
+                name: name,
             });
 
         const { createdAt, updatedAt, ...result } = user.get({ plain: true });
