@@ -7,7 +7,7 @@ class UsersController {
         try {
             const { id, email } = req.body;
 
-            await UserRepository.storeUser(id, email);
+            const user = await UserRepository.storeUser(id, email);
 
             return res.status(201).send(user);
         } catch (err) {

@@ -15,10 +15,13 @@ class UserRepository {
         let user = await User.findOne({ where: { id: userId } });
 
         if (!user)
-            await User.create({
+            user = await User.create({
                 id: userId,
                 email: userEmail,
             });
+
+        const { createdAt, updatedAt, ...result } = user.get({ plain: true });
+        return result;
     };
     async createUser(email, password) {
         const user = await User.create({ email, password });
