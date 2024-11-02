@@ -5,7 +5,9 @@ require('dotenv/config');
 class UsersController {
     async storeUser(req, res) {
         try {
-            await UserRepository.storeUser(req.userId, req.userEmail);
+            const { id, email } = req.body;
+
+            await UserRepository.storeUser(id, email);
 
             return res.status(201).send(user);
         } catch (err) {
