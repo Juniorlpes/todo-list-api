@@ -23,7 +23,7 @@ module.exports = {
         allowNull: false,
       },
       ownerId: {
-        type: Sequelize.UUID,
+        type: Sequelize.STRING,
         references: { model: 'users', key: 'id' },
         allowNull: false,
       },
