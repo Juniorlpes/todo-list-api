@@ -26,6 +26,10 @@ class UserRepository {
         const { createdAt, updatedAt, ...result } = user.get({ plain: true });
         return result;
     };
+
+    /**
+    * @deprecated
+    */
     async createUser(email, password) {
         const user = await User.create({ email, password });
 
@@ -45,6 +49,10 @@ class UserRepository {
             },
         };
     };
+
+    /**
+    * @deprecated
+    */
     async login(email, password) {
         const user = await User.findOne({ where: { email } });
 
@@ -72,6 +80,10 @@ class UserRepository {
             },
         };
     };
+
+    /**
+    * @deprecated
+    */
     async refreshToken(refreshToken) {
         //I would have put the refresh token in db to compare...
 

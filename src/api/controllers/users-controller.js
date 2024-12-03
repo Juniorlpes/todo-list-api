@@ -12,6 +12,10 @@ class UsersController {
             return res.status(500).send(err);
         }
     };
+
+    /**
+    * @deprecated
+    */
     async store(req, res) {
         try {
             const { email, password } = req.body;
@@ -28,6 +32,10 @@ class UsersController {
             return res.status(500).send(err);
         }
     };
+
+    /**
+    * @deprecated
+    */
     async login(req, res) {
         try {
             const { email, password } = req.body;
@@ -40,6 +48,10 @@ class UsersController {
             return res.status(error.statusCode || 500).send(error.message || error);
         }
     };
+
+    /**
+    * @deprecated
+    */
     async refreshToken(req, res) {
         try {
             const { refreshToken } = req.body;
