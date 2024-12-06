@@ -1,11 +1,13 @@
-const allowedOrigins = [
+import { CorsOptions } from "cors";
+
+const allowedOrigins: string[] = [
     // 'https://',
 ];
 
-const corsOptions = {
-    origin: function (origin, callback) {
+const corsOptions: CorsOptions = {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
         // Verifica se a origem da requisição está na lista de origens permitidas
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -15,4 +17,4 @@ const corsOptions = {
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
 };
 
-module.exports = corsOptions;
+export default corsOptions;
