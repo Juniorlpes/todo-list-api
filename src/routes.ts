@@ -1,21 +1,20 @@
 import { Router, Request, Response } from 'express';
 
+import isAuthenticated from './api/middlewares/fire-auth-middleware';
+import usersRoutes from './api/routes/users-routes';
+import todoRoutes from './api/routes/todo-routes';
+
 const appRoutes = Router();
 
-const fireAuthMiddleware = require('./api/middlewares/fire-auth-middleware');
-
-const usersRoutes = require('./api/routes/users-routes');
-const todoRoutes = require('./api/routes/todo-routes');
-
-appRoutes.get('/', async (req: Request, res: Response): Promise<Response> => {
-    return res.send('Hello');
+appRoutes.get('/', async (req: Request, res: Response): Promise<void> => {
+    res.send('Hello');
 });
 
-appRoutes.get('/api', async (request: Request, response: Response) => {
-    return response.send('it works');
+appRoutes.get('/api', async (request: Request, response: Response): Promise<void> => {
+    response.send('it works');
 });
 
-appRoutes.use('/api/auth', fireAuthMiddleware, usersRoutes);
-appRoutes.use('/api/todo', fireAuthMiddleware, todoRoutes);
+appRoutes.use('/api/auth', isAuthenticated, usersRoutes);
+appRoutes.use('/api/todo', isAuthenticated, todoRoutes);
 
 export default appRoutes;

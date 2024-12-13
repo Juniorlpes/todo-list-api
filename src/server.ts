@@ -1,6 +1,7 @@
 import app from './app';
 import admin from "firebase-admin";
-require('dotenv/config'); // ou import dotenv from 'dotenv'; e dotenv.config();
+
+import 'dotenv/config'; // ou import dotenv from 'dotenv'; e dotenv.config();
 import serviceAccount from "../secretKey.json";
 
 admin.initializeApp({

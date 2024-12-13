@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon src/server.ts",
     "build": "sucrase ./src -d ./dist --transforms typescript,imports"
   },
   "author": "",
@@ -31,6 +31,7 @@
     "@types/sequelize": "^4.28.20",
     "nodemon": "^3.0.3",
     "sucrase": "^3.35.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
 }

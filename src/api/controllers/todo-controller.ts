@@ -1,18 +1,31 @@
-const TodoRepository = require('../repositories/todo-repository');
+import { Response } from 'express';
+import AuthenticatedRequest from '../shared/autenticated-request';
+import TodoRepository from '../repositories/todo-repository';
 
 class TodoController {
-    async getAllByOwnerId(req, res) {
+    async getAllByOwnerId(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
-            const userId = req.userId;
+            const userId = req.userId as string;
 
             const todos = await TodoRepository.getAllByUser(userId);
 
             return res.status(200).send(todos);
-        } catch (error) {
+        } catch (error: any) {
             return res.status(error.statusCode || 500).send(error.message || error);
         }
-    };
-    async create(req, res) {
+    }
+    async getById(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        try {
+            const { id } = req.params;
+
+            const todo = await TodoRepository.getById(id);
+
+            return res.status(200).send(todo);
+        } catch (error: any) {
+            return res.status(error.statusCode || 500).send(error.message || error);
+        }
+    }
+    async create(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
             const { id, todo, done, order } = req.body;
 
@@ -21,26 +34,28 @@ class TodoController {
                 todo,
                 done,
                 order,
-                ownerId: req.userId
+                ownerId: req.userId as string
             });
 
             return res.status(201).send(result);
-        } catch (error) {
+        } catch (error: any) {
             return res.status(error.statusCode || 500).send(error.message || error);
         }
-    };
-    async delete(req, res) {
+    }
+
+    async delete(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
             const { id } = req.params;
 
             await TodoRepository.delete(id);
 
             return res.status(200).send();
-        } catch (error) {
+        } catch (error: any) {
             return res.status(error.statusCode || 500).send(error.message || error);
         }
-    };
-    async update(req, res) {
+    }
+
+    async update(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
             const { id, todo, done } = req.body;
 
@@ -51,13 +66,14 @@ class TodoController {
             });
 
             return res.status(200).send();
-        } catch (error) {
+        } catch (error: any) {
             return res.status(error.statusCode || 500).send(error.message || error);
         }
-    };
-    async updateAll(req, res) {
+    }
+
+    async updateAll(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
-            const todos = req.body.map(item => {
+            const todos = req.body.map((item: any) => {
                 const { id, todo, done, order } = item;
                 return { id, todo, done, order }; // ou realizar outras operações
             });
@@ -65,10 +81,10 @@ class TodoController {
             await TodoRepository.updateAll(todos);
 
             return res.status(200).send();
-        } catch (error) {
+        } catch (error: any) {
             return res.status(error.statusCode || 500).send(error.message || error);
         }
-    };
+    }
 }
 
-module.exports = new TodoController();
+export default new TodoController();
