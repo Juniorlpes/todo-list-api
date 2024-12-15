@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import UserRepository from '../repositories/user-repository';
 
 class UsersController {
-    async storeUser(req: Request, res: Response): Promise<Response> {
+    async storeUser(req: Request, res: Response): Promise<void> {
         try {
             const user = await UserRepository.storeUser(req.body);
-            return res.status(201).json(user);
+            res.status(201).json(user);
         } catch (err) {
-            return res.status(500).json(err);
+            res.status(500).json(err);
         }
     }
 }
